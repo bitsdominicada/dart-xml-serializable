@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
@@ -16,7 +17,7 @@ class XmlEnumGenerator extends GeneratorForAnnotation<XmlEnum> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    if (!element.library!.isNonNullableByDefault) {
+    if (!element.library!.featureSet.isEnabled(Feature.non_nullable)) {
       throw InvalidGenerationSourceError(
         'Generator cannot target libraries that have not been migrated to null-safety.',
         element: element,

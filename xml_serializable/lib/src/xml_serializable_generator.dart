@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
@@ -44,7 +45,7 @@ class XmlSerializableGenerator extends GeneratorForAnnotation<XmlSerializable> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    if (!element.library!.isNonNullableByDefault) {
+    if (!element.library!.featureSet.isEnabled(Feature.non_nullable)) {
       throw InvalidGenerationSourceError(
         'Generator cannot target libraries that have not been migrated to null-safety.',
         element: element,
@@ -381,7 +382,8 @@ class XmlSerializableGenerator extends GeneratorForAnnotation<XmlSerializable> {
           }
         }
 
-        for (final import in element.library.libraryImports) {
+        for (final import
+            in element.library.definingCompilationUnit.libraryImports) {
           for (final entry in import.namespace.definedNames.entries) {
             if (entry.value == type.element) {
               return XmlSerializableXmlElementSerializerGenerator(
